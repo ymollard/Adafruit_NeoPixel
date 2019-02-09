@@ -1,47 +1,42 @@
-// NeoPixel Ring simple sketch (c) 2013 Shae Erisson
-// released under the GPLv3 license to match the rest of the AdaFruit NeoPixel library
-
 #include <Adafruit_NeoPixel.h>
-#ifdef __AVR__
-  #include <avr/power.h>
-#endif
-
-// Which pin on the Arduino is connected to the NeoPixels?
-// On a Trinket or Gemma we suggest changing this to 1
+// Quel est le numéro du connecteur où sont branchés vos pixels ?
 #define PIN            6
 
-// How many NeoPixels are attached to the Arduino?
+// Combien de pixels sont branchés sur votre Arduino ?
 #define NUMPIXELS      16
 
-// When we setup the NeoPixel library, we tell it how many pixels, and which pin to use to send signals.
-// Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
-// example for more information on possible values.
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+// On créé un objet pour discuter avec les pixels (ne pas toucher)
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIN);
 
-int delayval = 500; // delay for half a second
+int delayval = 500; // Variable de délai en millisecondes
 
+// La fonction setup() initialise toutes les variables et fonctions au démarrage du programme
 void setup() {
-  // This is for Trinket 5V 16MHz, you can remove these three lines if you are not using a Trinket
-#if defined (__AVR_ATtiny85__)
-  if (F_CPU == 16000000) clock_prescale_set(clock_div_1);
-#endif
-  // End of trinket special code
-
-  pixels.begin(); // This initializes the NeoPixel library.
+  pixels.begin();
 }
 
+// La fonction loop() sera appelée en boucle pour mettre à jour votre animation
 void loop() {
 
-  // For a set of NeoPixels the first NeoPixel is 0, second is 1, all the way up to the count of pixels minus one.
+  // Cette boule for() parcoure chaque pixel entre le numéro 0 et le numéro NUMPIXELS
+  for(int i=0; i<NUMPIXELS; i=i+1){
 
-  for(int i=0;i<NUMPIXELS;i++){
+    // Cette fonction attribue une couleur (R, G, B) au pixel numéro i
+    pixels.setPixelColor(i, pixels.Color(0, 255, 0));  // Ici c'est vert
 
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    pixels.setPixelColor(i, pixels.Color(0,150,0)); // Moderately bright green color.
+    // Valide l'ensemble des couleurs attribuées précédemment 
+    pixels.show();
 
-    pixels.show(); // This sends the updated pixel color to the hardware.
-
-    delay(delayval); // Delay for a period of time (in milliseconds).
-
+    // On attend 500ms avant de traiter le pixel suivant
+    delay(delayval);
   }
+
+  for(int i=0; i<NUMPIXELS; i=i+1){
+    // Cette fois-ci on attribue la couleur noir (= éteint)
+    pixels.setPixelColor(i, pixels.Color(0, 0, 0));
+  }
+  
+  // On valide les couleurs noires toutes en meme temps, après attribution des valeurs de chaque pixel
+  pixels.show();
+  delay(delayval);
 }
